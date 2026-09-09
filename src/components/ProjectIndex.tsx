@@ -23,8 +23,8 @@ export function ProjectIndex() {
   };
 
   return (
-    <section id="work" className="px-[var(--edge)] py-[10vh]">
-      <div className="mb-8 flex items-end justify-between">
+    <section id="work" className="px-[var(--edge)] py-[15vh]">
+      <div className="mb-12 flex items-end justify-between">
         <h2 className="text-[13px] font-medium uppercase tracking-[0.16em] text-ink/50">
           Избранное — {projects.length} проектов
         </h2>
@@ -43,11 +43,11 @@ export function ProjectIndex() {
               href={`/work/${p.slug}`}
               data-cursor-target
               data-cursor-label="Смотреть"
-              className="group grid grid-cols-[1fr_auto_auto] items-center gap-6 py-5 transition-colors"
+              className="group grid grid-cols-[1fr_auto_auto] items-center gap-8 py-7 transition-colors"
               onPointerEnter={() => setHover(i)}
             >
               <span
-                className="u-display text-[clamp(2rem,5vw,4.25rem)] transition-[transform,color] duration-300 ease-spring group-hover:translate-x-3 group-hover:text-burgundy"
+                className="u-display text-[clamp(2rem,4.6vw,4rem)] leading-[1] transition-[transform,color] duration-300 ease-spring group-hover:translate-x-3 group-hover:text-burgundy"
               >
                 {p.title}
               </span>
@@ -87,7 +87,7 @@ export function ProjectIndex() {
       )}
 
       {/* mobile grid */}
-      <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:hidden">
+      <div className="grid grid-cols-1 gap-14 sm:grid-cols-2 md:hidden">
         {projects.map((p, i) => (
           <ProjectCard key={p.slug} project={p} index={i} />
         ))}

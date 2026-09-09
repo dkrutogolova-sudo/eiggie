@@ -216,7 +216,7 @@ export function BackgroundCanvas() {
     <canvas
       ref={ref}
       aria-hidden
-      className="fixed inset-0 -z-10 h-[100dvh] w-screen"
+      className="fixed inset-0 -z-10 h-[100dvh] w-full"
       style={{ background: "var(--paper)" }}
     />
   );

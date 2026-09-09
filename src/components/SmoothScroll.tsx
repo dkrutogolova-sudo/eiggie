@@ -3,16 +3,12 @@
 import { useEffect } from "react";
 import Lenis from "lenis";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 /**
- * Inertial scroll (Lenis) driven off GSAP's ticker so ScrollTrigger stays in
- * sync. Disabled entirely under prefers-reduced-motion — native scroll only.
+ * Inertial scroll (Lenis) driven off GSAP's ticker. Disabled entirely under
+ * prefers-reduced-motion — native scroll only. Reveals use IntersectionObserver
+ * (see Reveal.tsx), so no ScrollTrigger wiring is needed here.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const reduced = useReducedMotion();
@@ -26,8 +22,6 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       wheelMultiplier: 0.9,
       touchMultiplier: 1.4,
     });
-
-    lenis.on("scroll", ScrollTrigger.update);
 
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);

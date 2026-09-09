@@ -30,7 +30,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   const next = projects[(idx + 1) % projects.length];
 
   return (
-    <article className="pt-[22vh]">
+    <article className="pt-[26vh]">
       <header className="px-[var(--edge)]">
         <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.16em] text-ink/50">
           {project.client}
@@ -63,7 +63,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           </div>
         </dl>
 
-        <div className="mt-10 max-w-[62ch] space-y-4 text-lg text-ink/75">
+        <div className="mt-12 max-w-[62ch] space-y-4 text-lg leading-relaxed text-ink/75">
           {project.description.map((para, i) => (
             <p key={i}>{para}</p>
           ))}

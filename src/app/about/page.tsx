@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="px-[var(--edge)] pt-[22vh]">
+    <div className="px-[var(--edge)] pb-[12vh] pt-[26vh]">
       <Reveal as="h1" className="u-display max-w-[16ch] text-[clamp(2.6rem,9vw,7rem)] leading-[0.9]">
         Нейроконтент, собранный руками
       </Reveal>
 
-      <div className="mt-12 max-w-[60ch] space-y-5 text-lg text-ink/75">
+      <div className="mt-12 max-w-[60ch] space-y-5 text-lg leading-relaxed text-ink/75">
         <p>{studio.blurb}</p>
         <p>
           Название <span className="text-burgundy">eiggie</span> ничего не

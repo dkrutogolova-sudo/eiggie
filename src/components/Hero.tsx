@@ -12,60 +12,59 @@ export function Hero() {
 
   useEffect(() => {
     if (reduced || !ref.current) return;
+    let tween: gsap.core.Tween;
     const ctx = gsap.context(() => {
-      gsap.from("[data-hero-line]", {
-        yPercent: 120,
-        duration: 1,
-        ease: "back.out(1.4)",
-        stagger: 0.09,
-        delay: 0.15,
-      });
-      gsap.from("[data-hero-fade]", {
+      tween = gsap.from("[data-hero-fade]", {
         opacity: 0,
-        y: 16,
-        duration: 0.8,
-        delay: 0.8,
-        stagger: 0.1,
+        y: 24,
+        duration: 0.9,
+        ease: "power3.out",
+        stagger: 0.12,
+        delay: 0.3,
       });
     }, ref);
-    return () => ctx.revert();
+    // Failsafe: if the frame loop was paused (page opened in a background tab),
+    // snap the intro to its end state when the page becomes visible.
+    const onVis = () => {
+      if (!document.hidden && tween) tween.progress(1);
+    };
+    document.addEventListener("visibilitychange", onVis);
+    const t = window.setTimeout(() => tween && tween.progress(1), 2200);
+    return () => {
+      document.removeEventListener("visibilitychange", onVis);
+      window.clearTimeout(t);
+      ctx.revert();
+    };
   }, [reduced]);
 
   return (
     <section
       ref={ref}
-      className="relative flex min-h-[100dvh] flex-col justify-between px-[var(--edge)] pb-10 pt-[28vh]"
+      className="flex min-h-[88svh] flex-col px-[var(--edge)] pb-[16vh] pt-[26vh]"
     >
-      <div>
-        <div className="overflow-hidden">
-          <div data-hero-line>
-            <LiquidWordmark className="text-[26vw] leading-[0.78] md:text-[22vw]" />
-          </div>
-        </div>
-        <div className="mt-4 max-w-[54ch] overflow-hidden">
-          <p
-            data-hero-line
-            className="u-display text-[clamp(1.4rem,3.4vw,2.6rem)] text-ink"
-          >
-            {studio.tagline}. {studio.founders[0].name.split(" ")[0]} и{" "}
-            {studio.founders[1].name.split(" ")[0]} делают визуальные истории на
-            стыке генеративных моделей и рук.
-          </p>
-        </div>
-      </div>
+      <LiquidWordmark className="text-[27vw] leading-[0.8] md:text-[24vw]" />
 
-      <div className="flex items-end justify-between">
-        <p data-hero-fade className="max-w-[40ch] text-sm text-ink/60">
+      <p
+        data-hero-fade
+        className="u-display mt-[7vh] max-w-[22ch] text-[clamp(1.5rem,3.6vw,2.7rem)] leading-[1.05] text-ink"
+      >
+        {studio.tagline}. {studio.founders[0].name.split(" ")[0]} и{" "}
+        {studio.founders[1].name.split(" ")[0]} делают визуальные истории на стыке
+        генеративных моделей и рук.
+      </p>
+
+      <div className="mt-[15vh] flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
+        <p data-hero-fade className="max-w-[40ch] text-sm leading-relaxed text-ink/60">
           {studio.blurb}
         </p>
         <a
           data-hero-fade
           href="#work"
           data-cursor-target
-          className="flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.16em] text-ink/70 hover:text-burgundy"
+          className="flex items-center gap-2 whitespace-nowrap text-[13px] font-medium uppercase tracking-[0.16em] text-ink/70 transition-colors hover:text-burgundy"
         >
           Работы
-          <span className="inline-block animate-bounce">↓</span>
+          <span className="inline-block motion-safe:animate-bounce">↓</span>
         </a>
       </div>
     </section>

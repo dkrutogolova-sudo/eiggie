@@ -17,12 +17,12 @@ export function SiteHeader() {
       <Link
         href="/"
         data-cursor-target
-        className="u-display text-2xl text-paper"
+        className="u-display text-xl text-paper md:text-2xl"
         aria-label="eiggie — на главную"
       >
         eiggie
       </Link>
-      <nav className="flex items-center gap-5 text-[13px] font-medium uppercase tracking-[0.12em] text-paper">
+      <nav className="flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.1em] text-paper md:gap-5 md:text-[13px] md:tracking-[0.12em]">
         {NAV.map((item) => {
           const active =
             item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { studio } from "@/data/studio";
-import { LiquidWordmark } from "@/components/LiquidWordmark";
 
 export const metadata: Metadata = {
   title: "Контакты",
@@ -17,38 +16,31 @@ export default function ContactPage() {
   ] as const;
 
   return (
-    <div className="flex min-h-[100dvh] flex-col justify-between px-[var(--edge)] pt-[24vh]">
-      <div>
-        <h1 className="u-display text-[clamp(2.6rem,10vw,8rem)] leading-[0.88]">
-          Напишите нам
-        </h1>
-        <p className="mt-6 max-w-[46ch] text-lg text-ink/70">
-          Контакты пока заглушки — обновим, как только определимся с адресами.
-          Пишите про проекты, коллаборации и странные идеи.
-        </p>
+    <div className="px-[var(--edge)] pb-[18vh] pt-[26vh]">
+      <h1 className="u-display max-w-[12ch] text-[clamp(2.8rem,10vw,8rem)] leading-[0.9]">
+        Напишите нам
+      </h1>
+      <p className="mt-8 max-w-[46ch] text-lg leading-relaxed text-ink/70">
+        Контакты пока заглушки — обновим, как только определимся с адресами.
+        Пишите про проекты, коллаборации и странные идеи.
+      </p>
 
-        <ul className="mt-12 max-w-2xl divide-y divide-ink/12 border-y border-ink/12">
-          {rows.map(([label, value, href]) => (
-            <li key={label}>
-              <a
-                href={href}
-                data-cursor-target
-                data-cursor-label="Скопировать"
-                className="flex items-center justify-between py-5 text-lg transition-colors hover:text-burgundy"
-              >
-                <span className="text-sm uppercase tracking-[0.12em] text-ink/45">
-                  {label}
-                </span>
-                <span>{value}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="pointer-events-none overflow-hidden pb-6">
-        <LiquidWordmark className="text-[30vw] leading-[0.8]" />
-      </div>
+      <ul className="mt-16 max-w-2xl divide-y divide-ink/12 border-y border-ink/12">
+        {rows.map(([label, value, href]) => (
+          <li key={label}>
+            <a
+              href={href}
+              data-cursor-target
+              className="flex items-center justify-between gap-6 py-6 text-lg transition-colors hover:text-burgundy"
+            >
+              <span className="text-sm uppercase tracking-[0.12em] text-ink/45">
+                {label}
+              </span>
+              <span className="text-right">{value}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

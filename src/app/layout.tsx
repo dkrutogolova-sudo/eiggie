@@ -8,9 +8,11 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GooDefs } from "@/lib/goo";
 
-// Variable fonts — no `weight`/`axes` so next/font keeps the full variable range.
+// Fraunces variable — pull in the SOFT + WONK axes for the playful wobble.
+// (No `weight` key: that would pin it and disable the variable range.)
 const display = Fraunces({
   subsets: ["latin"],
+  axes: ["SOFT", "WONK"],
   variable: "--font-display",
   display: "swap",
 });

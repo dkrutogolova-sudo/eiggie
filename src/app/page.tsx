@@ -14,12 +14,12 @@ export default function HomePage() {
         as="section"
         wonky
         stagger
-        className="grid gap-6 px-[var(--edge)] py-[12vh] md:grid-cols-[0.9fr_1.1fr]"
+        className="grid gap-8 px-[var(--edge)] py-[18vh] md:grid-cols-[0.9fr_1.1fr] md:gap-12"
       >
-        <h2 className="u-display text-[clamp(2rem,6vw,4rem)]">
+        <h2 className="u-display text-[clamp(2rem,6vw,4rem)] leading-[1]">
           Студия из двух человек и очень большого числа генераций
         </h2>
-        <div className="space-y-4 text-lg text-ink/70">
+        <div className="space-y-4 text-lg leading-relaxed text-ink/70">
           <p>{studio.blurb}</p>
           <p>
             Мы не верим в «нажал кнопку — получил результат». Нейросети у нас — это

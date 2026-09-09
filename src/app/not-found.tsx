@@ -1,15 +1,16 @@
 import Link from "next/link";
-import { LiquidWordmark } from "@/components/LiquidWordmark";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center gap-6 px-[var(--edge)] text-center">
-      <LiquidWordmark className="text-[22vw] leading-none" />
-      <p className="u-display text-3xl">Такой страницы нет</p>
+    <div className="flex min-h-[70svh] flex-col items-center justify-center gap-5 px-[var(--edge)] pt-[20vh] text-center">
+      <p className="u-display text-[clamp(4rem,16vw,10rem)] leading-none text-burgundy">
+        404
+      </p>
+      <p className="u-display text-2xl md:text-3xl">Такой страницы нет</p>
       <Link
         href="/"
         data-cursor-target
-        className="border-b border-burgundy pb-0.5 text-burgundy"
+        className="border-b border-burgundy pb-0.5 text-burgundy transition-colors hover:text-burgundy-bright"
       >
         Вернуться на главную
       </Link>
