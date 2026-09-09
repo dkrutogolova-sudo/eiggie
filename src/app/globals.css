@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f7f3eb;
+  --ink: #141416;
+  --burgundy: #7c2b3b;
+  --burgundy-bright: #a63a4e;
+  --glacier: #aac9d9;
+  --glacier-deep: #5e93ae;
+  --nightsky: #1e2a3a;
+  --silver: #e3e4e6;
+
+  --edge: 1.15rem; /* page gutter on mobile */
+}
+
+@media (min-width: 768px) {
+  :root {
+    --edge: 2.5rem;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hide the native cursor only when the custom one is active (pointer: fine) */
+@media (pointer: fine) {
+  body[data-cursor="on"] {
+    cursor: none;
+  }
+  body[data-cursor="on"] a,
+  body[data-cursor="on"] button {
+    cursor: none;
+  }
+}
+
+::selection {
+  background: var(--burgundy);
+  color: var(--paper);
+}
+
+/* Utility: oversized display type that can wobble */
+.u-display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
