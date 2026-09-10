@@ -4,17 +4,17 @@ import { useEffect, useRef } from "react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
- * Logo PLACEHOLDER — "eiggie" as goo-filtered blobs of type.
+ * Logo PLACEHOLDER — "eiggie" as a permanently liquid mass of type.
  *
- * On load the letters drip apart into separate blobs and coalesce (the impulse
- * only fires once real frames are flowing, so a background-tab load can't freeze
- * it mid-scatter). At rest they keep a slow drift so the goo is always pinching
- * and merging, and they shy away from the pointer. Offsets are clamped so it
- * can't fly off, and it rests at translate(0,0) — a legible solid "eiggie" —
- * whenever the frame loop isn't running.
+ * Every letter rides a sum of sine waves (position + rotation + vertical
+ * stretch) with its own phase, so neighbours are always pulling apart and the
+ * goo filter bridges them into blobs. On load there's an extra decaying burst
+ * that flings them out and settles. It rests at transform:none (a legible solid
+ * "eiggie") only before the first frame / under reduced-motion, and offsets are
+ * clamped so a paused frame loop can't fling it off screen.
  */
 const LETTERS = "eiggie".split("");
-const MAX_OFFSET = 95;
+const MAX_OFFSET = 78;
 
 export function LiquidWordmark({ className = "" }: { className?: string }) {
   const reduced = useReducedMotion();
@@ -29,9 +29,10 @@ export function LiquidWordmark({ className = "" }: { className?: string }) {
     const state = spans.map((_, i) => ({
       x: 0,
       y: 0,
-      vx: 0,
-      vy: 0,
-      phase: i * 1.7 + i * i * 0.3,
+      phase: i * 1.6 + i * i * 0.35,
+      // per-letter entrance direction
+      bx: (Math.random() - 0.5) * 2,
+      by: -(0.5 + Math.random()),
     }));
 
     let pointer = { x: -9999, y: -9999 };
@@ -40,10 +41,8 @@ export function LiquidWordmark({ className = "" }: { className?: string }) {
 
     let raf = 0;
     let running = true;
-    let animTime = 0;
+    let t = 0; // seconds of real elapsed animation
     let last = 0;
-    let frames = 0;
-    let kicked = false;
     const clamp = (v: number, m: number) => (v < -m ? -m : v > m ? m : v);
 
     const loop = (now: number) => {
@@ -54,46 +53,46 @@ export function LiquidWordmark({ className = "" }: { className?: string }) {
         raf = requestAnimationFrame(loop);
         return;
       }
-      const dt = Math.min(dtMs, 32) / 16;
-      animTime += dtMs / 1000;
-      frames++;
-
-      // entrance: once we've seen a few real frames, throw the letters apart
-      if (!kicked && frames > 3) {
-        kicked = true;
-        state.forEach((s) => {
-          s.vy = -(16 + Math.random() * 22);
-          s.vx = (Math.random() - 0.5) * 18;
-        });
-      }
-
-      const ramp = Math.min(1, animTime / 2);
+      t += dtMs / 1000;
+      const ramp = Math.min(1, t / 0.9);
+      const burst = Math.exp(-t * 1.6) * 46; // decays over ~1.5s
 
       spans.forEach((el, i) => {
         const s = state[i];
-        // perpetual drift target
-        const tx = Math.sin(animTime * 0.85 + s.phase) * 10 * ramp;
-        const ty = Math.cos(animTime * 0.7 + s.phase * 1.6) * 8 * ramp;
+        const ph = s.phase;
 
-        s.vx += (tx - s.x) * 0.05 * dt;
-        s.vy += (ty - s.y) * 0.05 * dt;
+        // organic multi-frequency drift — big enough to keep the goo bridging
+        let tx =
+          (Math.sin(t * 0.7 + ph) * 17 + Math.sin(t * 1.9 + ph * 1.7) * 11) * ramp;
+        let ty =
+          (Math.cos(t * 0.6 + ph * 1.3) * 15 + Math.cos(t * 2.3 + ph * 0.9) * 9) *
+          ramp;
 
-        // pointer repulsion — breaks the word into blobs on hover
+        // entrance burst
+        tx += s.bx * burst;
+        ty += s.by * burst;
+
+        // pointer repulsion — rips the word into blobs on hover
         const r = el.getBoundingClientRect();
         const dx = r.left + r.width / 2 - pointer.x;
         const dy = r.top + r.height / 2 - pointer.y;
         const dist = Math.hypot(dx, dy);
-        if (dist < 170) {
-          const f = (1 - dist / 170) * 4 * dt;
-          s.vx += (dx / (dist || 1)) * f;
-          s.vy += (dy / (dist || 1)) * f;
+        if (dist < 180) {
+          const f = (1 - dist / 180) * 70;
+          tx += (dx / (dist || 1)) * f;
+          ty += (dy / (dist || 1)) * f;
         }
 
-        s.vx *= 0.9;
-        s.vy *= 0.9;
-        s.x = clamp(s.x + s.vx, MAX_OFFSET);
-        s.y = clamp(s.y + s.vy, MAX_OFFSET);
-        el.style.transform = `translate(${s.x.toFixed(2)}px, ${s.y.toFixed(2)}px)`;
+        // ease toward the target
+        s.x += (clamp(tx, MAX_OFFSET) - s.x) * 0.12;
+        s.y += (clamp(ty, MAX_OFFSET) - s.y) * 0.12;
+
+        const rot = Math.sin(t * 0.9 + ph * 2.1) * 8 * ramp;
+        const sy = 1 + Math.sin(t * 1.3 + ph * 1.1) * 0.14 * ramp;
+
+        el.style.transform =
+          `translate(${s.x.toFixed(2)}px, ${s.y.toFixed(2)}px) ` +
+          `rotate(${rot.toFixed(2)}deg) scaleY(${sy.toFixed(3)})`;
       });
       raf = requestAnimationFrame(loop);
     };
@@ -127,7 +126,7 @@ export function LiquidWordmark({ className = "" }: { className?: string }) {
           key={i}
           data-l
           className="inline-block will-change-transform"
-          style={{ marginInline: "-0.03em" }}
+          style={{ marginInline: "-0.04em" }}
           aria-hidden
         >
           {l}

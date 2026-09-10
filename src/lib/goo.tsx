@@ -34,17 +34,17 @@ export function GooDefs() {
         </filter>
         <filter
           id="goo-hard"
-          x="-40%"
-          y="-80%"
-          width="180%"
-          height="260%"
+          x="-50%"
+          y="-90%"
+          width="200%"
+          height="280%"
           colorInterpolationFilters="sRGB"
         >
-          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
           <feColorMatrix
             in="blur"
             mode="matrix"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 24 -11"
+            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 26 -12"
             result="goo"
           />
           <feComposite in="SourceGraphic" in2="goo" operator="atop" />

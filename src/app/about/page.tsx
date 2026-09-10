@@ -25,7 +25,7 @@ export default function AboutPage() {
         <p>Локация: {studio.location}</p>
       </div>
 
-      <section className="mt-[12vh] grid gap-12 md:grid-cols-2">
+      <section className="mt-[16vh] grid gap-x-12 gap-y-20 md:grid-cols-2">
         {studio.founders.map((f, i) => (
           <Reveal key={f.name} wonky>
             <PlaceholderMedia
@@ -34,20 +34,20 @@ export default function AboutPage() {
               aspect={4 / 5}
               index={i}
             />
-            <h2 className="u-display mt-4 text-3xl">{f.name}</h2>
-            <p className="text-sm uppercase tracking-[0.12em] text-ink/45">
+            <h2 className="u-display mt-8 text-3xl">{f.name}</h2>
+            <p className="mt-3 text-sm uppercase tracking-[0.12em] text-ink/45">
               {f.role}
             </p>
-            <p className="mt-3 text-ink/70">{f.bio}</p>
+            <p className="mt-5 max-w-[42ch] leading-relaxed text-ink/70">{f.bio}</p>
           </Reveal>
         ))}
       </section>
 
-      <section className="mt-[14vh] border-t border-ink/12 py-14">
+      <section className="mt-[18vh] border-t border-ink/12 py-16">
         <h2 className="text-[13px] uppercase tracking-[0.16em] text-ink/45">
           Как мы работаем
         </h2>
-        <div className="mt-6 grid gap-8 md:grid-cols-3">
+        <div className="mt-10 grid gap-x-10 gap-y-12 md:grid-cols-3">
           {[
             ["Идея вперёд инструмента", "Сначала решаем, что за история. Модель подбираем под неё, а не наоборот."],
             ["Пайплайн, а не рулетка", "Собираем повторяемый процесс: консистентные персонажи, кадры, стиль."],
@@ -55,7 +55,7 @@ export default function AboutPage() {
           ].map(([t, d]) => (
             <div key={t}>
               <h3 className="u-display text-2xl">{t}</h3>
-              <p className="mt-2 text-ink/70">{d}</p>
+              <p className="mt-3 leading-relaxed text-ink/70">{d}</p>
             </div>
           ))}
         </div>
