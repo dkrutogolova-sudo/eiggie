@@ -124,9 +124,10 @@ for (const [slug, entry] of Object.entries(MANIFEST)) {
       "-i", src,
       "-map", "0:v:0", "-map", "0:a:0?",
       "-vf", SCALE,
-      "-c:v", "libx264", "-profile:v", "high", "-preset", "medium", "-crf", "24",
+      "-c:v", "libx264", "-profile:v", "high", "-preset", "slow", "-crf", "26",
+      "-maxrate", "2600k", "-bufsize", "5200k",
       "-pix_fmt", "yuv420p",
-      "-c:a", "aac", "-b:a", "128k",
+      "-c:a", "aac", "-b:a", "112k",
       "-movflags", "+faststart",
       mp4,
     ]);

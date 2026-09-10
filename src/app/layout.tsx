@@ -23,7 +23,16 @@ const sans = Space_Grotesk({
   display: "swap",
 });
 
+// Set NEXT_PUBLIC_SITE_URL in Vercel once the real domain is attached
+// (e.g. https://eiggie.studio). Falls back to the Vercel preview URL, then local.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "eiggie — нейроконтент-студия",
     template: "%s — eiggie",
@@ -35,6 +44,16 @@ export const metadata: Metadata = {
     description:
       "Визуальные истории на стыке генеративных моделей и ручного продакшена.",
     type: "website",
+    locale: "ru_RU",
+    siteName: "eiggie",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "eiggie" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "eiggie — нейроконтент-студия",
+    description:
+      "Визуальные истории на стыке генеративных моделей и ручного продакшена.",
+    images: ["/og.png"],
   },
 };
 

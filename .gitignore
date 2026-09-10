@@ -8,8 +8,3 @@ next-env.d.ts
 .env*.local
 .vercel
 
-# Transcoded project video — heavy, regenerable from the raw drops via
-# `node scripts/transcode.mjs`. Poster JPGs are committed so the index works.
-/public/work/**/*.mp4
-/public/work/**/*.webm
-
