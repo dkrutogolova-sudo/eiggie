@@ -31,18 +31,24 @@ const MANIFEST = {
   "gentle-monster": { videos: [[join(A, "Gentle Monster.mp4"), "film"]] },
   "maison-margiela": { videos: [[join(A, "Maison Margiela.mp4"), "film"]] },
   "consistency-studies": {
-    videos: [
-      [join(A, "hf_20260716_211955_2a51b6fd-8c72-43a9-9c8f-4c4ccc0837d6.mp4"), "motion"],
-    ],
     images: [
       [join(A, "Серия фото 2", "freepik__lowangle-fashion-editorial-portraitcamera-position__14908.png"), "a-01"],
       [join(A, "Серия фото 2", "freepik__leave-everything-unchanged-in-the-first-photo-but-__51733.png"), "a-02"],
       [join(A, "Серия фото 2", "freepik__leave-the-first-frame-unchanged-replace-the-eye-co__51736.png"), "a-03"],
       [join(A, "Серия фото 2", "freepik__leave-the-fifth-frame-unchanged-make-the-angle-exa__51734.png"), "a-04"],
       [join(A, "Серия фото 2", "freepik__leave-the-fifth-frame-unchanged-make-the-angle-exa__64775.png"), "a-05"],
+    ],
+  },
+  "portrait-series": {
+    images: [
       [join(A, "Серия фото 1", "61b0a768aff2be48449b02b06c2a0ac6_f11939eb-aa77-4a77-9072-de0a642cacd1.jpg"), "b-01"],
       [join(A, "Серия фото 1", "78eee6841863dda9e449a0cac156fc2d_cc930aa6-3378-4e39-877b-d21790ad3d69.jpg"), "b-02"],
       [join(A, "Серия фото 1", "f77edf67827bfebe7c63ebc63af07b88_1eeca354-2ad0-40a7-aa93-8b5eb898b387.jpg"), "b-03"],
+    ],
+  },
+  "portrait-motion": {
+    videos: [
+      [join(A, "hf_20260716_211955_2a51b6fd-8c72-43a9-9c8f-4c4ccc0837d6.mp4"), "motion"],
     ],
   },
   "film-emulation": {

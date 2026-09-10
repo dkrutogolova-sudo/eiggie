@@ -4,18 +4,17 @@ import { useEffect, useRef } from "react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
- * Logo PLACEHOLDER. "eiggie" as goo-filtered blobs of type: a slow per-letter
- * drift keeps the goo bridging and pinching so the mark always reads as liquid,
- * and the letters shy away from the pointer.
+ * Logo PLACEHOLDER — "eiggie" as goo-filtered blobs of type.
  *
- * Robustness: letters REST at translate(0,0) — a plain solid "eiggie" — and the
- * drift only accumulates while frames are actually running. If the frame loop
- * is paused (page opened in a background tab, reduced-motion), the mark just
- * sits there fully legible instead of freezing mid-scatter and vanishing under
- * the goo threshold. Displacement is also hard-clamped.
+ * On load the letters drip apart into separate blobs and coalesce (the impulse
+ * only fires once real frames are flowing, so a background-tab load can't freeze
+ * it mid-scatter). At rest they keep a slow drift so the goo is always pinching
+ * and merging, and they shy away from the pointer. Offsets are clamped so it
+ * can't fly off, and it rests at translate(0,0) — a legible solid "eiggie" —
+ * whenever the frame loop isn't running.
  */
 const LETTERS = "eiggie".split("");
-const MAX_OFFSET = 42;
+const MAX_OFFSET = 95;
 
 export function LiquidWordmark({ className = "" }: { className?: string }) {
   const reduced = useReducedMotion();
@@ -41,37 +40,51 @@ export function LiquidWordmark({ className = "" }: { className?: string }) {
 
     let raf = 0;
     let running = true;
-    let animTime = 0; // seconds of *actual* elapsed animation, not wall clock
+    let animTime = 0;
     let last = 0;
+    let frames = 0;
+    let kicked = false;
     const clamp = (v: number, m: number) => (v < -m ? -m : v > m ? m : v);
 
     const loop = (now: number) => {
       if (!running) return;
       const dtMs = last ? now - last : 16;
       last = now;
-      // A big gap => the tab was throttled/hidden. Skip the step so nothing flies off.
       if (dtMs > 120) {
         raf = requestAnimationFrame(loop);
         return;
       }
-      const dt = Math.min(dtMs, 32) / 16; // ~1 at 60fps
+      const dt = Math.min(dtMs, 32) / 16;
       animTime += dtMs / 1000;
-      const ramp = Math.min(1, animTime / 1.5);
+      frames++;
+
+      // entrance: once we've seen a few real frames, throw the letters apart
+      if (!kicked && frames > 3) {
+        kicked = true;
+        state.forEach((s) => {
+          s.vy = -(16 + Math.random() * 22);
+          s.vx = (Math.random() - 0.5) * 18;
+        });
+      }
+
+      const ramp = Math.min(1, animTime / 2);
 
       spans.forEach((el, i) => {
         const s = state[i];
-        const tx = Math.sin(animTime * 0.9 + s.phase) * 6 * ramp;
-        const ty = Math.cos(animTime * 0.7 + s.phase * 1.6) * 4.5 * ramp;
+        // perpetual drift target
+        const tx = Math.sin(animTime * 0.85 + s.phase) * 10 * ramp;
+        const ty = Math.cos(animTime * 0.7 + s.phase * 1.6) * 8 * ramp;
 
-        s.vx += (tx - s.x) * 0.04 * dt;
-        s.vy += (ty - s.y) * 0.04 * dt;
+        s.vx += (tx - s.x) * 0.05 * dt;
+        s.vy += (ty - s.y) * 0.05 * dt;
 
+        // pointer repulsion — breaks the word into blobs on hover
         const r = el.getBoundingClientRect();
         const dx = r.left + r.width / 2 - pointer.x;
         const dy = r.top + r.height / 2 - pointer.y;
         const dist = Math.hypot(dx, dy);
-        if (dist < 150) {
-          const f = (1 - dist / 150) * 3.4 * dt;
+        if (dist < 170) {
+          const f = (1 - dist / 170) * 4 * dt;
           s.vx += (dx / (dist || 1)) * f;
           s.vy += (dy / (dist || 1)) * f;
         }

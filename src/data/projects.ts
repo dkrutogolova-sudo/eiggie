@@ -186,7 +186,6 @@ export const projects: Project[] = [
     description: [
       "Рабочая серия про главную боль генеративного продакшена — консистентность персонажа. Берём один портрет и прогоняем через управляемые правки: «оставь лицо, поменяй ракурс», «оставь всё, поменяй цвет глаз».",
       "Между кадрами меняется ровно то, что нужно, остальное держится. По этим пробам потом собираются пайплайны для клиентских проектов.",
-      "В середине — короткий мувинг-тест того же лица в движении.",
     ],
     accent: "silver",
     cover: "/work/consistency-studies/a-01.jpg",
@@ -204,22 +203,59 @@ export const projects: Project[] = [
           "/work/consistency-studies/a-05.jpg",
         ],
       },
-      {
-        kind: "video",
-        src: "/work/consistency-studies/motion.mp4",
-        poster: "/work/consistency-studies/motion.jpg",
-        aspect: 0.5625,
-        caption: "Мувинг-тест, 15 сек",
-      },
+    ],
+  },
+  {
+    // TODO: настоящее название и описание — что это за серия
+    slug: "portrait-series",
+    title: "Портретная серия",
+    year: 2026,
+    stack: ["Midjourney v7", "Flux Kontext", "Photoshop"],
+    role: ANDREY_ROLE,
+    author: "Андрей Почивалов",
+    client: "Внутренний проект",
+    summary: "Отдельная портретная серия — три кадра.",
+    description: [
+      "Три кадра одного образа. Плейсхолдер-описание — замени.",
+    ],
+    accent: "burgundy",
+    cover: "/work/portrait-series/b-01.jpg",
+    coverAspect: 0.806,
+    media: [
       {
         kind: "series",
         aspect: 0.806,
-        caption: "Второй прогон, другой типаж",
         images: [
-          "/work/consistency-studies/b-01.jpg",
-          "/work/consistency-studies/b-02.jpg",
-          "/work/consistency-studies/b-03.jpg",
+          "/work/portrait-series/b-01.jpg",
+          "/work/portrait-series/b-02.jpg",
+          "/work/portrait-series/b-03.jpg",
         ],
+      },
+    ],
+  },
+  {
+    // TODO: настоящее название и описание
+    slug: "portrait-motion",
+    title: "Портрет в движении",
+    year: 2026,
+    stack: ["Higgsfield", "Kling 2.0", "After Effects"],
+    role: ANDREY_ROLE,
+    author: "Андрей Почивалов",
+    client: "Внутренний проект",
+    summary: "Отдельный мувинг-тест портрета — 15 секунд вертикали.",
+    description: [
+      "Короткий тест того же типа лица в движении. Плейсхолдер-описание — замени.",
+    ],
+    accent: "nightsky",
+    cover: "/work/portrait-motion/motion.jpg",
+    coverAspect: 0.5625,
+    media: [
+      {
+        kind: "video",
+        src: "/work/portrait-motion/motion.mp4",
+        poster: "/work/portrait-motion/motion.jpg",
+        aspect: 0.5625,
+        caption: "Мувинг-тест, 15 сек",
       },
     ],
   },
