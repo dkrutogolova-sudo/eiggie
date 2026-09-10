@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { studio } from "@/data/studio";
 import { Reveal } from "@/components/Reveal";
-import { PlaceholderMedia } from "@/components/PlaceholderMedia";
 
 export const metadata: Metadata = {
   title: "Студия",
@@ -26,13 +25,13 @@ export default function AboutPage() {
       </div>
 
       <section className="mt-[16vh] grid gap-x-12 gap-y-20 md:grid-cols-2">
-        {studio.founders.map((f, i) => (
+        {studio.founders.map((f) => (
           <Reveal key={f.name} wonky>
-            <PlaceholderMedia
-              seed={`founder-${i}`}
-              accent={i === 0 ? "burgundy" : "glacier"}
-              aspect={4 / 5}
-              index={i}
+            <img
+              src={f.photo}
+              alt={f.name}
+              className="w-full rounded-[10px] bg-ink/5 object-cover"
+              style={{ aspectRatio: "1 / 1" }}
             />
             <h2 className="u-display mt-8 text-3xl">{f.name}</h2>
             <p className="mt-3 text-sm uppercase tracking-[0.12em] text-ink/45">
