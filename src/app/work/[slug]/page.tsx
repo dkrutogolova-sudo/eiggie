@@ -45,10 +45,14 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             <dd className="tabular-nums">{project.year}</dd>
           </div>
           <div>
+            <dt className="mb-1 uppercase tracking-[0.12em] text-ink/45">Автор</dt>
+            <dd>{project.author}</dd>
+          </div>
+          <div>
             <dt className="mb-1 uppercase tracking-[0.12em] text-ink/45">Роль</dt>
             <dd>{project.role}</dd>
           </div>
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 md:col-span-3">
             <dt className="mb-1 uppercase tracking-[0.12em] text-ink/45">Стек</dt>
             <dd className="flex flex-wrap gap-x-2 gap-y-1">
               {project.stack.map((s) => (
