@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import type { Project } from "@/data/projects";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { asset } from "@/lib/asset";
 
 /** Sticker-ish card used for the mobile project grid. Tilts toward the pointer. */
 export function ProjectCard({ project }: { project: Project; index?: number }) {
@@ -39,7 +40,7 @@ export function ProjectCard({ project }: { project: Project; index?: number }) {
         style={{ aspectRatio: String(project.coverAspect) }}
       >
         <img
-          src={project.cover}
+          src={asset(project.cover)}
           alt={project.title}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-500 ease-spring group-hover:scale-[1.03]"

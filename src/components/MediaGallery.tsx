@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import type { Media, Project } from "@/data/projects";
 import { Video } from "./Video";
+import { asset } from "@/lib/asset";
 
 /** Renders a project's media list: video blocks, single stills, and draggable
  *  image series (a group of frames that belong to one project). */
@@ -35,7 +36,7 @@ function MediaBlock({ media, order }: { media: Media; order: number }) {
   return (
     <figure className="px-[var(--edge)]">
       <img
-        src={media.src}
+        src={asset(media.src)}
         alt={media.caption ?? ""}
         loading="lazy"
         className="mx-auto w-full rounded-[10px] bg-ink/5"
@@ -104,7 +105,7 @@ function Series({
         {media.images.map((src, i) => (
           <img
             key={i}
-            src={src}
+            src={asset(src)}
             alt={`${media.caption ?? "Кадр"} ${i + 1}`}
             loading="lazy"
             draggable={false}

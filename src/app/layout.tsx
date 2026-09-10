@@ -7,6 +7,7 @@ import { Cursor } from "@/components/Cursor";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GooDefs } from "@/lib/goo";
+import { asset } from "@/lib/asset";
 
 // Fraunces variable — pull in the SOFT + WONK axes for the playful wobble.
 // (No `weight` key: that would pin it and disable the variable range.)
@@ -23,16 +24,13 @@ const sans = Space_Grotesk({
   display: "swap",
 });
 
-// Set NEXT_PUBLIC_SITE_URL in Vercel once the real domain is attached
-// (e.g. https://eiggie.studio). Falls back to the Vercel preview URL, then local.
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000");
+// Set in the deploy workflow; swap to the custom domain once it's attached.
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+// metadataBase must be the ORIGIN only — the basePath is added back via asset().
+const META_ORIGIN = new URL(SITE_URL).origin;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: new URL(META_ORIGIN),
   title: {
     default: "eiggie — нейроконтент-студия",
     template: "%s — eiggie",
@@ -46,14 +44,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ru_RU",
     siteName: "eiggie",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "eiggie" }],
+    images: [{ url: asset("/og.png"), width: 1200, height: 630, alt: "eiggie" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "eiggie — нейроконтент-студия",
     description:
       "Визуальные истории на стыке генеративных моделей и ручного продакшена.",
-    images: ["/og.png"],
+    images: [asset("/og.png")],
   },
 };
 

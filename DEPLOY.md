@@ -1,71 +1,50 @@
-# Деплой eiggie
+# Деплой eiggie — GitHub Pages
 
-Хостинг — **Vercel** (план Hobby, бесплатный). Исходники — **GitHub**.
-Видео закоммичены в репозиторий (`public/work/**/*.mp4`, ~78 МБ) и отдаются с CDN Vercel.
+Сайт статический (`output: "export"`). Хостинг — **GitHub Pages**, сборка —
+**GitHub Actions** (`.github/workflows/deploy.yml`). Vercel недоступен из РФ.
 
----
+## Разовая настройка (делаешь ты в браузере)
 
-## 1. GitHub (делаешь ты)
+1. Код уже в репозитории `dkrutogolova-sudo/eiggie`.
+2. Открой репозиторий → **Settings** → слева **Pages**.
+3. **Build and deployment → Source** → выбери **GitHub Actions**.
+4. Всё. При следующем пуше (или вкладка **Actions** → workflow → **Run workflow**)
+   соберётся и выкатится на:
+   **https://dkrutogolova-sudo.github.io/eiggie/**
 
-1. Создай аккаунт на github.com.
-2. Создай пустой репозиторий `eiggie` (без README, без .gitignore — они уже в проекте).
-   Приватный можно.
-3. Дай мне URL репозитория (`https://github.com/<логин>/eiggie.git`) — я запушу код.
-   Либо запушь сам из папки проекта:
+Дальше каждый `git push` в `main` = авто-пересборка и деплой (~2–3 мин).
 
-   ```bash
-   cd ~/eiggie
-   git remote add origin https://github.com/<логин>/eiggie.git
-   git branch -M main
-   git push -u origin main
+## Кастомный домен (когда купишь)
+
+Домен покупай у российского регистратора (**reg.ru**, **nic.ru**, **timeweb**) —
+зарубежные не оплатить рос. картой.
+
+Когда домен будет:
+
+1. В репозитории: **Settings → Pages → Custom domain** → вписать домен → Save.
+   Появится файл `CNAME` в репозитории — это нормально.
+2. У регистратора в DNS добавить записи (для apex-домена `example.com`):
    ```
+   A   @   185.199.108.153
+   A   @   185.199.109.153
+   A   @   185.199.110.153
+   A   @   185.199.111.153
+   CNAME  www   dkrutogolova-sudo.github.io.
+   ```
+   (для поддомена вида `www.example.com` — только CNAME на `dkrutogolova-sudo.github.io.`)
+3. В **Settings → Pages** дождаться галочки, включить **Enforce HTTPS**.
+4. Прислать мне домен — я уберу `NEXT_PUBLIC_BASE_PATH` из
+   `.github/workflows/deploy.yml` и поставлю `NEXT_PUBLIC_SITE_URL` на домен
+   (пути перестанут быть `/eiggie/...`, станут от корня). Один коммит.
 
-   (Первый push ~80 МБ из-за видео — это нормально, один раз.)
+## Обновление контента
 
-## 2. Vercel (делаешь ты, ~2 минуты)
+Правишь `src/data/projects.ts` / `src/data/studio.ts` (или присылаешь мне) →
+`git push` → Actions сам пересоберёт. Новое видео — в `public/work/<slug>/`,
+прогнать можно `node scripts/transcode.mjs`.
 
-1. Зайди на vercel.com → **Sign up** → войти через GitHub.
-2. **Add New… → Project** → выбери репозиторий `eiggie` → **Import**.
-3. Настройки определятся автоматически (Framework: Next.js). Ничего менять не надо.
-4. **Deploy**. Через ~1–2 минуты сайт живёт на `https://<имя>.vercel.app`.
+## Если репозиторий приватный
 
-С этого момента каждый `git push` в `main` = автоматический деплой.
-Каждый пуш в другую ветку / PR = отдельная preview-ссылка.
-
-## 3. Домен (когда купишь)
-
-1. Купи домен у любого регистратора (Cloudflare Registrar, Namecheap, reg.ru…).
-2. В Vercel: **Project → Settings → Domains → Add** → введи домен.
-3. Vercel покажет, что прописать у регистратора. Обычно один из двух вариантов:
-   - **A-запись** `@ → 76.76.21.21` и **CNAME** `www → cname.vercel-dns.com`, либо
-   - перевод **неймсерверов** домена на Vercel (он их укажет).
-4. Пришли мне домен — я выставлю его в коде:
-   - `NEXT_PUBLIC_SITE_URL` в **Vercel → Settings → Environment Variables**
-     (значение — `https://твойдомен`), это включит правильные ссылки в
-     `metadataBase`, OG-превью, `sitemap.xml`, `robots.txt`.
-   - После добавления переменной нужен один redeploy (кнопка в Vercel или пустой пуш).
-
-## Что уже готово в проекте
-
-- `next build` проходит чисто, 16 статических страниц.
-- `public/og.png` — превью для мессенджеров; `src/app/icon.svg` — favicon.
-- `src/app/sitemap.ts`, `src/app/robots.ts` — генерируются автоматически.
-- `.nvmrc` = Node 20 (Vercel и так возьмёт правильную версию).
-
-## Обновление контента после запуска
-
-Правишь `src/data/projects.ts` / `src/data/studio.ts` (или присылаешь мне), затем:
-
-```bash
-cd ~/eiggie
-git add -A && git commit -m "текст" && git push
-```
-
-Vercel сам пересоберёт и выкатит. Новые видео — класть в `public/work/<slug>/`,
-можно прогнать через `node scripts/transcode.mjs` из сырых файлов.
-
-## Если трафик вырастет
-
-Hobby-план Vercel = 100 ГБ трафика в месяц. ~78 МБ видео при большом наплыве
-это съедят. Тогда переносим видео на Cloudflare R2 / Stream или Vercel Blob и
-меняем пути в `projects.ts` на внешние URL — отдельная небольшая задача.
+GitHub Pages для приватных репозиториев доступен на бесплатном плане
+(GitHub Free) — сайт при этом публичный. Если Pages не включается — сделай
+репозиторий публичным (**Settings → General → Danger Zone → Change visibility**).

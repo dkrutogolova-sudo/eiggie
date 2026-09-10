@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { asset } from "@/lib/asset";
 
 /**
  * Portfolio video block. Muted loop that plays only while it's on screen
@@ -69,8 +70,8 @@ export function Video({
       >
         <video
           ref={ref}
-          src={src}
-          poster={poster}
+          src={asset(src)}
+          poster={asset(poster)}
           muted={muted}
           loop
           playsInline

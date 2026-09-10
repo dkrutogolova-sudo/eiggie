@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { projects } from "@/data/projects";
 import { ProjectCard } from "./ProjectCard";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { asset } from "@/lib/asset";
 
 /**
  * Home index. Desktop: a big type list with the hovered project's cover riding
@@ -117,7 +118,7 @@ export function ProjectIndex() {
         {projects.map((p, i) => (
           <img
             key={p.slug}
-            src={p.cover}
+            src={asset(p.cover)}
             alt=""
             loading="eager"
             className="absolute inset-0 h-full w-full object-cover transition-opacity duration-200"

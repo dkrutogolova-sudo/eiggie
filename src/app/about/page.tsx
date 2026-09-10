@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { studio } from "@/data/studio";
 import { Reveal } from "@/components/Reveal";
 import { Kinetic } from "@/components/Kinetic";
+import { asset } from "@/lib/asset";
 
 export const metadata: Metadata = {
   title: "Студия",
@@ -31,7 +32,7 @@ export default function AboutPage() {
         {studio.founders.map((f) => (
           <Reveal key={f.name} wonky>
             <img
-              src={f.photo}
+              src={asset(f.photo)}
               alt={f.name}
               className="w-full rounded-[10px] bg-ink/5 object-cover"
               style={{ aspectRatio: "1 / 1" }}
