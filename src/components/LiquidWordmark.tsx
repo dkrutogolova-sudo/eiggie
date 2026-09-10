@@ -117,7 +117,12 @@ export function LiquidWordmark({ className = "" }: { className?: string }) {
     <div
       ref={wrapRef}
       className={`u-display inline-flex leading-none text-burgundy ${className}`}
-      style={{ filter: reduced ? undefined : "url(#goo-hard)" }}
+      style={{
+        // goo blobs + a hair of blur over the whole thing = that soft, smeared
+        // "effect on top" look from the moodboard, not crisp plain letters
+        filter: reduced ? undefined : "url(#goo-hard) blur(0.6px)",
+        fontVariationSettings: '"SOFT" 68, "WONK" 1',
+      }}
       aria-label="eiggie"
       role="img"
     >
