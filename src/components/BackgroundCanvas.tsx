@@ -21,6 +21,7 @@ uniform float uTime;
 uniform vec2 uPointer;   // 0..1, smoothed
 uniform float uPointerV; // pointer speed 0..1
 uniform float uScroll;   // page scroll in "screens"
+uniform float uScrollV;  // signed scroll velocity, smoothed, ~-1..1
 
 // palette (paper / glacier / burgundy / nightsky)
 const vec3 PAPER   = vec3(0.968, 0.952, 0.921);
@@ -62,15 +63,25 @@ void main() {
   p.x *= uRes.x / uRes.y;
 
   float t = uTime * 0.045;
-  vec2 flow = vec2(t, -t * 0.6 + uScroll * 0.25);
+  float sv = uScrollV;
+  float sva = abs(sv);
 
-  // domain warp
+  // scroll drags the flow and, when fast, smears the field vertically
+  vec2 flow = vec2(t, -t * 0.6 + uScroll * 0.25 - sv * 0.35);
+  p.y -= sv * 0.10;
+  p.y *= 1.0 - sva * 0.22;
+
+  // domain warp — amplitude swells with scroll speed
+  float warp = 1.0 + sva * 1.6;
   vec2 q = vec2(fbm(p * 1.6 + flow), fbm(p * 1.6 - flow + 3.1));
   vec2 r = vec2(
-    fbm(p * 2.3 + q * 1.4 + flow * 1.3 + 1.7),
-    fbm(p * 2.3 + q * 1.4 - flow * 0.7 + 9.2)
+    fbm(p * 2.3 + q * 1.4 * warp + flow * 1.3 + 1.7),
+    fbm(p * 2.3 + q * 1.4 * warp - flow * 0.7 + 9.2)
   );
-  float n = fbm(p * 2.0 + r * 1.6);
+  float n = fbm(p * 2.0 + r * 1.6 * warp);
+
+  // fine horizontal ripple while scrolling
+  n += sin(p.y * 42.0 + uTime * 3.0) * sva * 0.05;
 
   // pointer bloom
   vec2 pp = uPointer;
@@ -80,12 +91,12 @@ void main() {
   n += bloom * 0.35;
 
   vec3 col = PAPER;
-  col = mix(col, GLACIER, smoothstep(0.35, 0.72, n) * 0.7);
-  col = mix(col, BURG, smoothstep(0.62, 0.95, n + r.x * 0.15) * 0.5);
+  col = mix(col, GLACIER, smoothstep(0.35, 0.72, n) * (0.7 + sva * 0.3));
+  col = mix(col, BURG, smoothstep(0.62, 0.95, n + r.x * 0.15) * (0.5 + sva * 0.25));
   col = mix(col, NIGHT, smoothstep(0.80, 1.05, n) * 0.25);
 
-  // keep it light enough for text on top
-  col = mix(PAPER, col, 0.62);
+  // keep it light enough for text on top — a touch richer while scrolling
+  col = mix(PAPER, col, 0.62 + sva * 0.12);
 
   // grain
   float g = hash(gl_FragCoord.xy + uTime) - 0.5;
@@ -129,7 +140,22 @@ export function BackgroundCanvas() {
       uPointer: { value: new THREE.Vector2(0.5, 0.5) },
       uPointerV: { value: 0 },
       uScroll: { value: 0 },
+      uScrollV: { value: 0 },
     };
+
+    let lastScrollY = window.scrollY;
+    let lastScrollT = performance.now();
+    let scrollVelRaw = 0;
+    const onScroll = () => {
+      const now = performance.now();
+      const dt = Math.max(now - lastScrollT, 16) / 1000;
+      const dy = window.scrollY - lastScrollY;
+      // px/sec normalised so a brisk flick ~= 1, clamped
+      scrollVelRaw = Math.max(-1.6, Math.min(1.6, dy / dt / 2600));
+      lastScrollY = window.scrollY;
+      lastScrollT = now;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     const mat = new THREE.ShaderMaterial({
       vertexShader: VERT,
@@ -177,6 +203,9 @@ export function BackgroundCanvas() {
       target.v *= 0.94;
       uniforms.uPointerV.value += (target.v - uniforms.uPointerV.value) * 0.1;
       uniforms.uScroll.value = window.scrollY / window.innerHeight;
+      // decay the raw reading, then ease the uniform toward it (settles when idle)
+      scrollVelRaw *= 0.86;
+      uniforms.uScrollV.value += (scrollVelRaw - uniforms.uScrollV.value) * 0.12;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(loop);
     };
@@ -205,6 +234,7 @@ export function BackgroundCanvas() {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVisibility);
       geo.dispose();
       mat.dispose();

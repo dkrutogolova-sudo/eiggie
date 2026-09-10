@@ -4,7 +4,13 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { studio } from "@/data/studio";
 import { LiquidWordmark } from "./LiquidWordmark";
+import { Kinetic } from "./Kinetic";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+
+const LEDE =
+  `${studio.tagline}. ${studio.founders[0].name.split(" ")[0]} и ` +
+  `${studio.founders[1].name.split(" ")[0]} делают визуальные истории на стыке ` +
+  `генеративных моделей и рук.`;
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -44,14 +50,12 @@ export function Hero() {
     >
       <LiquidWordmark className="text-[27vw] leading-[0.8] md:text-[24vw]" />
 
-      <p
-        data-hero-fade
+      <Kinetic
+        as="p"
+        text={LEDE}
+        delay={0.35}
         className="u-display mt-[7vh] max-w-[22ch] text-[clamp(1.5rem,3.6vw,2.7rem)] leading-[1.05] text-ink"
-      >
-        {studio.tagline}. {studio.founders[0].name.split(" ")[0]} и{" "}
-        {studio.founders[1].name.split(" ")[0]} делают визуальные истории на стыке
-        генеративных моделей и рук.
-      </p>
+      />
 
       <div className="mt-[15vh] flex flex-wrap items-end justify-between gap-x-10 gap-y-6">
         <p data-hero-fade className="max-w-[40ch] text-sm leading-relaxed text-ink/60">

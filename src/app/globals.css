@@ -92,6 +92,71 @@ html.lenis body {
   transform: none;
 }
 
+/* Kinetic headings (components/Kinetic.tsx) — words rise + unblur, staggered */
+[data-kinetic] [data-w] {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s ease;
+}
+[data-k="pending"] [data-w] {
+  opacity: 0;
+  transform: translateY(0.42em) rotate(2.5deg);
+  filter: blur(12px);
+}
+[data-k="in"] [data-w] {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* Project list rows sweep in from the left, one after another */
+[data-rowsweep] {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.5s ease;
+}
+[data-rowsweep][data-swept="0"] {
+  opacity: 0;
+  transform: translateX(-2.5rem);
+  filter: blur(6px);
+}
+[data-rowsweep][data-swept="1"] {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-kinetic] [data-w],
+  [data-rowsweep] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+/* Liquid shroud page transition (app/template.tsx) */
+@keyframes shroud-retract {
+  from {
+    transform: translateY(2%);
+  }
+  to {
+    transform: translateY(-108%);
+  }
+}
+.shroud-strip {
+  transform: translateY(2%);
+  animation: shroud-retract 0.6s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shroud-strip {
+    animation: none;
+    transform: translateY(-120%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

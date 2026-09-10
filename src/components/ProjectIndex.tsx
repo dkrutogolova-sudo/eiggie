@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { projects } from "@/data/projects";
 import { ProjectCard } from "./ProjectCard";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 /**
  * Home index. Desktop: a big type list with the hovered project's cover riding
@@ -18,6 +19,37 @@ export function ProjectIndex() {
   const [hover, setHover] = useState<number | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const reduced = useReducedMotion();
+
+  // Rows sweep in from the left, one after another, when the list first appears.
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list || reduced) return;
+    const rows = Array.from(list.querySelectorAll<HTMLElement>("[data-rowsweep]"));
+    rows.forEach((r, i) => {
+      r.dataset.swept = "0";
+      r.style.transitionDelay = `${(i * 0.06).toFixed(3)}s`;
+    });
+    const reveal = () => rows.forEach((r) => (r.dataset.swept = "1"));
+    if (list.getBoundingClientRect().top < window.innerHeight * 0.9) {
+      requestAnimationFrame(() => requestAnimationFrame(reveal));
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          reveal();
+          io.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    io.observe(list);
+    const failsafe = window.setTimeout(reveal, 2600);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(failsafe);
+    };
+  }, [reduced]);
 
   useEffect(() => {
     const onMove = (e: PointerEvent) => {
@@ -53,7 +85,7 @@ export function ProjectIndex() {
       {/* desktop list */}
       <ul ref={listRef} className="hidden md:block">
         {projects.map((p, i) => (
-          <li key={p.slug} className="border-t border-ink/12 last:border-b">
+          <li key={p.slug} data-rowsweep className="border-t border-ink/12 last:border-b">
             <Link
               href={`/work/${p.slug}`}
               data-row={i}

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { projects, getProject } from "@/data/projects";
 import { MediaGallery } from "@/components/MediaGallery";
 import { Reveal } from "@/components/Reveal";
+import { Kinetic } from "@/components/Kinetic";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -35,9 +36,11 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         <p className="mb-4 text-[13px] font-medium uppercase tracking-[0.16em] text-ink/50">
           {project.client}
         </p>
-        <h1 className="u-display text-[clamp(2.6rem,9vw,7rem)] leading-[0.9]">
-          {project.title}
-        </h1>
+        <Kinetic
+          as="h1"
+          text={project.title}
+          className="u-display text-[clamp(2.6rem,9vw,7rem)] leading-[0.9]"
+        />
 
         <dl className="mt-10 grid max-w-3xl grid-cols-2 gap-x-8 gap-y-5 border-t border-ink/12 pt-6 text-sm md:grid-cols-3">
           <div>
